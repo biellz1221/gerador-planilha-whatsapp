@@ -1,0 +1,32 @@
+{
+	"name": "gerador-planilha-whatsapp",
+	"version": "1.0.0",
+	"description": "Gerador de planilha com links para contato via whatsa",
+	"main": "src/index.js",
+	"scripts": {
+		"start": "node src/index.js",
+		"dev": "nodemon src/index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/biellz1221/gerador-planilha-whatsapp.git"
+	},
+	"keywords": [
+		"node",
+		"whatsapp",
+		"google sheets"
+	],
+	"author": "Gabriel Baptista",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/biellz1221/gerador-planilha-whatsapp/issues"
+	},
+	"homepage": "https://github.com/biellz1221/gerador-planilha-whatsapp#readme",
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	},
+	"dependencies": {
+		"express": "^4.17.1"
+	}
+}
