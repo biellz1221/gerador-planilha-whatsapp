@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { formatMessage } = require("./messageHandlers");
 
 function removeFile(path) {
 	fs.unlink(path, (err) => {
@@ -14,9 +15,7 @@ function capitalizeFirst(str) {
 }
 
 function normalizeRecord(row) {
-	let telefone, nome, email, pnome, link, pronome, atendente, message;
-
-	email = row.email;
+	let telefone, nome, pnome, link, message;
 
 	telefone = `${row.ddi ? row.ddi : "55"}${row.ddd}${row.telefone}`;
 
@@ -28,15 +27,26 @@ function normalizeRecord(row) {
 
 	pnome = nome.split(" ")[0];
 
+	message = formatMessage(row.message, {
+		"[nome]": nome,
+		"[pnome]": pnome,
+		"[telefone]": telefone,
+		"[pronome]": row.pronome,
+		"[atendente]": row.atendente,
+		"[email]": row.email,
+	});
+
+	link = generateWhatsappLink(telefone, message);
+
 	return {
-		pnome,
 		nome,
-		email,
+		pnome,
+		email: row.email,
 		telefone,
-		pronome,
-		atendente,
-		link,
+		pronome: row.pronome,
+		atendente: row.atendente,
 		message,
+		link,
 	};
 }
 

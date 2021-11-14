@@ -7,16 +7,17 @@ const csvHeader = [
 	{ id: "telefone", title: "Telefone" },
 	{ id: "pronome", title: "Pronome" },
 	{ id: "atendente", title: "Atendente" },
+	{ id: "message", title: "Mensagem" },
 	{ id: "link", title: "LinkZap" },
 ];
 
-async function generateCSVFromCSV(rows) {
-	const csvWriterOptions = {
-		path: `./test-files/output-${originalCSV.name}`,
+async function generateCSVFromCSV(rows, csvName) {
+	const outputOptions = {
+		path: `./test-files/output-${csvName}`,
 		header: csvHeader,
 	};
 
-	const csvWriter = createCsvWriter(csvWriterOptions);
+	const csvWriter = createCsvWriter(outputOptions);
 	await csvWriter.writeRecords(rows);
 
 	console.log("The CSV file was written successfully");
