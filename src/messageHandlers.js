@@ -13,13 +13,11 @@ function formatMessage(message, data) {
 	let msgWithVariables = message;
 
 	msgVariables.forEach((variable) => {
-		let regEx = new RegExp(variable, "g");
-
-		msgWithVariables = msgWithVariables.replace(regEx, data[variable]);
+		msgWithVariables = msgWithVariables.split(variable).join(data[variable]);
 
 		return true;
 	});
-
+	console.log("MSG => ", msgWithVariables);
 	return msgWithVariables;
 }
 
