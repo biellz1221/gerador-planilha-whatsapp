@@ -27,17 +27,26 @@ app.use(cors());
 app.use(morgan("dev"));
 
 app.use((req, res, next) => {
+	//check if downloads folder exists, if not, creates
+	if (!fs.existsSync("./downloads")) {
+		fs.mkdirSync("./downloads");
+	}
+
 	//check and delete outputs older than 1 hour
-	const result = findRemoveSync("/downloads", {
+	const result = findRemoveSync("./downloads", {
 		age: { seconds: 3600 },
 		extensions: [".csv", ".xlsx", ".xls"],
 		limit: 100,
 	});
+
+	console.log("[STATUS] findRemove Result => ", result);
+
 	next();
 });
 
 app.use("/", express.static(__dirname + "/frontend/dist"));
 app.use("/static", express.static(__dirname + "/static"));
+app.use("/downloads", express.static("./downloads"));
 
 app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/frontend/dist/index.html");
@@ -109,7 +118,7 @@ app.post("/csv", async (req, res) => {
 
 app.post("/xls", async (req, res) => {
 	const { atendente, pronome, message } = req.body;
-
+	console.log("MSG BODY => ", message);
 	const downloadsPath = `./downloads/${nanoid()}`;
 	try {
 		if (!req.files) {

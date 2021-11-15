@@ -83,6 +83,7 @@
 <script>
 	import FileUpload from "vue-upload-component";
 	import axios from "axios";
+	import { nanoid } from "nanoid";
 	export default {
 		name: "Home",
 		components: {
@@ -175,7 +176,7 @@
 						const url = window.URL.createObjectURL(new Blob([res.data]));
 						const link = document.createElement("a");
 						link.href = url;
-						link.setAttribute("download", res.headers["x-file-name"]);
+						link.setAttribute("download", `/downloads/${nanoid()}-${res.headers["x-file-name"]}`);
 						document.body.appendChild(link);
 						link.click();
 					});

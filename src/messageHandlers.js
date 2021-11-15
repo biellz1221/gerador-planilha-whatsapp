@@ -11,10 +11,15 @@ const msgVariables = [
 
 function formatMessage(message, data) {
 	let msgWithVariables = message;
+
 	msgVariables.forEach((variable) => {
-		msgWithVariables = msgWithVariables.replaceAll(variable, data[variable]);
+		let regEx = new RegExp(variable, "g");
+
+		msgWithVariables = msgWithVariables.replace(regEx, data[variable]);
+
 		return true;
 	});
+
 	return msgWithVariables;
 }
 
