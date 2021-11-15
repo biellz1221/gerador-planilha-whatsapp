@@ -14,9 +14,9 @@ const xlsHeader = [
 	{ id: "link", title: "LinkZap" },
 ];
 
-async function generateXLSFromCSV(rows, xlsName) {
+async function generateXLSFromCSV(rows, xlsPath, callback) {
 	const outputOptions = {
-		path: `./test-files/output-${xlsName}`,
+		path: xlsPath,
 		header: xlsHeader,
 	};
 
@@ -38,7 +38,11 @@ async function generateXLSFromCSV(rows, xlsName) {
 		return true;
 	});
 
-	workbook.write(outputOptions.path.replace(".csv", ".xlsx"));
+	workbook.write(outputOptions.path, (err, stats) => {
+		if (err) return console.log(`[ERROR] => `, err);
+		// console.log("[STATS] => ", stats);
+		callback();
+	});
 
 	console.log("The XLS file was written successfully");
 }

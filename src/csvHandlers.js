@@ -11,13 +11,14 @@ const csvHeader = [
 	{ id: "link", title: "LinkZap" },
 ];
 
-async function generateCSVFromCSV(rows, csvName) {
+async function generateCSVFromCSV(rows, csvPath) {
 	const outputOptions = {
-		path: `./test-files/output-${csvName}`,
+		path: csvPath,
 		header: csvHeader,
 	};
 
 	const csvWriter = createCsvWriter(outputOptions);
+
 	await csvWriter.writeRecords(rows);
 
 	console.log("The CSV file was written successfully");
