@@ -14,4 +14,65 @@ a {
 
 button {
 	cursor: pointer;
+	outline: none;
+}
+
+strike,
+del {
+	text-decoration: line-through;
+}
+
+.home {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	max-width: 800px;
+	width: 90%;
+	margin: 0 auto;
+	height: 100vh;
+}
+
+.fields {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	margin-top: 24px;
+	.radioGroup {
+		display: flex;
+		justify-content: flex-start;
+		label.radio {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			width: 30px;
+			gap: 5px;
+		}
+	}
+}
+
+.messageField {
+	width: 100%;
+	.textControls {
+		ul {
+			display: flex;
+			gap: 6px;
+			width: 100%;
+			flex-wrap: wrap;
+			padding: 6px 0;
+		}
+	}
+	textarea {
+		width: 100%;
+	}
+}
+
+.uploadArea {
+	padding: 24px;
+	margin: 24px 0;
+	border-radius: 10px;
+	border: 1px dashed #ccc;
+	width: 100%;
+	text-align: center;
 }

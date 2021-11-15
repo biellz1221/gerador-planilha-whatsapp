@@ -37,10 +37,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/", express.static(__dirname + "/frontend/dist"));
-
-// app.get("/", (req, res) => {
-// 	res.status(200).sendFile("./frontend/dist/index.html");
-// });
+app.use("/static", express.static(__dirname + "/static"));
 
 app.get("/", function (req, res) {
 	res.sendFile(__dirname + "/frontend/dist/index.html");

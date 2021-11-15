@@ -1,22 +1,53 @@
 /* eslint-disable */
 <template>
 	<div class="home">
-		<p>Faça upload de um arquivo seguindo <a href="/sample-files/sample.csv" target="_blank" download>este exemplo</a>, insira a mensagem e clique em gerar</p>
-
-		<div class="formField">
-			<label for="atendente">Atendente</label><br />
-			<input type="text" id="atendente" name="atendente" v-model="atendente" />
+		<p>Faça upload de um arquivo seguindo <a href="/static/sample.csv" target="_blank" download>este exemplo</a>, insira a mensagem e clique em gerar</p>
+		<div class="fields">
+			<div class="formField">
+				<label for="atendente"><b>Atendente</b></label
+				><br />
+				<input class="input" type="text" id="atendente" name="atendente" v-model="atendente" />
+			</div>
+			<div class="formField">
+				<label for="pronome"
+					><b>Pronome</b><br />
+					<div class="radioGroup">
+						<label class="radio"> <input type="radio" name="pronome" id="o" value="o" v-model="pronome" /> o </label>
+						<label class="radio"> <input type="radio" name="pronome" id="a" value="a" v-model="pronome" /> a </label>
+					</div>
+				</label>
+			</div>
 		</div>
-		<div class="formField">
-			<br /><label for="pronome"
-				>Pronome<br />
-				<input type="radio" name="pronome" id="o" value="o" v-model="pronome" /> o<br />
-				<input type="radio" name="pronome" id="a" value="a" v-model="pronome" /> a<br />
-			</label>
-		</div>
-		<div class="formField">
-			<br /><label for="message">Mensagem</label><br />
-			<textarea name="message" id="message" cols="30" rows="10" v-model="message"></textarea>
+		<div class="messageField">
+			<label for="message"><b>Mensagem</b></label>
+			<div class="textControls">
+				<ul>
+					<li>
+						<span class="button" @click="insertVariable(bold)"><b>Negrito</b></span>
+					</li>
+					<li>
+						<span class="button" @click="insertVariable(italic)"><em>Itálico</em></span>
+					</li>
+					<li>
+						<span class="button" @click="insertVariable(striketrough)"><del>Strike</del></span>
+					</li>
+					<li>
+						<span class="button" @click="insertVariable(monospace)"><span class="is-family-monospace">Monospace</span></span>
+					</li>
+					<li v-for="(txtVar, index) in msgVariables" :key="index">
+						<span @click="insertVariable(txtVar.variable)" class="button" :title="txtVar.description">{{ txtVar.variable }}</span>
+					</li>
+				</ul>
+			</div>
+			<textarea
+				placeholder="Digite a sua mensagem. Utilize os botões acima para inserir variáveis ou formatar o texto."
+				@mouseup="detectTextSelection($event)"
+				ref="msgTxt"
+				name="message"
+				id="message"
+				class="textarea"
+				v-model="message"
+			></textarea>
 		</div>
 
 		<div class="uploadArea">
@@ -28,7 +59,7 @@
 
 			<div v-else>
 				<div class="text-center p-5">
-					<h4>Arraste e solte o arquivo aqui <br />ou</h4>
+					<h4>Arraste e solte o arquivo aqui ou<br /><br /></h4>
 					<label for="file" class="button">Selecione o arquivo</label>
 				</div>
 			</div>
@@ -41,10 +72,10 @@
 				<file-upload class="btn btn-primary" post-action="/upload/post" :multiple="false" :drop="true" :drop-directory="true" v-model="files" ref="upload">
 					<label class="button">Selecionar Arquivos</label>
 				</file-upload>
-				<button type="button" class="btn btn-success" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="postStuff">
-					<label class="button">Gerar</label>
-				</button>
 			</div>
+		</div>
+		<div class="is-flex is-justify-content-center">
+			<button type="button" class="button is-primary" v-if="!$refs.upload || !$refs.upload.active" @click.prevent="postStuff">Gerar</button>
 		</div>
 	</div>
 </template>
@@ -60,12 +91,69 @@
 		data() {
 			return {
 				files: [],
+				selectedText: "",
+				msgVariables: [
+					{ variable: "[nome]", description: "Nome completo" },
+					{ variable: "[pnome]", description: "Primeiro nome" },
+					{ variable: "[telefone]", description: "Telefone do lead" },
+					{ variable: "[email]", description: "Email do lead" },
+					{ variable: "[pronome]", description: "Pronome do atendente" },
+					{ variable: "[atendente]", description: "Nome do atendente" },
+				],
 				atendente: "Gabriel",
 				pronome: "o",
 				message: "O primeiro nome de [nome] é [pnome], o telefone é [telefone], o email [email] e quem vai atender é [pronome] [atendente]",
 			};
 		},
+		computed: {
+			bold() {
+				return `*${this.selectedText}*`;
+			},
+			italic() {
+				return `_${this.selectedText}_`;
+			},
+			striketrough() {
+				return `~${this.selectedText}~`;
+			},
+			monospace() {
+				return `\`\`\`${this.selectedText}\`\`\``;
+			},
+		},
 		methods: {
+			detectTextSelection(e) {
+				let selection = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
+				this.selectedText = selection;
+				console.log(selection);
+			},
+			insertVariable: function (insert) {
+				const self = this;
+				var tArea = this.$refs.msgTxt;
+
+				console.log("VAriável", insert);
+				// filter:
+				if (0 == insert) {
+					return;
+				}
+				if (0 == cursorPos) {
+					return;
+				}
+
+				// get cursor's position:
+				let startPos = tArea.selectionStart,
+					endPos = tArea.selectionEnd,
+					cursorPos = startPos,
+					tmpStr = tArea.value;
+
+				console.log({ startPos, endPos, cursorPos, tmpStr });
+				// insert:
+				self.message = tmpStr.substring(0, startPos) + insert + tmpStr.substring(endPos, tmpStr.length);
+
+				// move cursor:
+				setTimeout(() => {
+					cursorPos += insert.length;
+					tArea.selectionStart = tArea.selectionEnd = cursorPos;
+				}, 10);
+			},
 			postStuff() {
 				const formData = new FormData();
 				formData.append("atendente", this.atendente);
@@ -74,7 +162,7 @@
 				this.files.forEach((file) => formData.append("csv", file.file));
 
 				axios
-					.post("http://gerador-de-planilhas-de-zap.herokuapp.com/xls", formData, {
+					.post("/xls", formData, {
 						responseType: "blob",
 						headers: {
 							"Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
