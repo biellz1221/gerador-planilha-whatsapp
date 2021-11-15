@@ -171,6 +171,5 @@ app.post("/xls", async (req, res) => {
 	}
 });
 
-const port = 1337;
-
-app.listen(port, () => console.log(`App is listening on port ${port}.`));
+const port_number = server.listen(process.env.PORT || 3000);
+app.listen(port_number);
