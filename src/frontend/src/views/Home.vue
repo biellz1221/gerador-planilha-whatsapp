@@ -124,7 +124,7 @@
 			detectTextSelection(e) {
 				let selection = e.target.value.substring(e.target.selectionStart, e.target.selectionEnd);
 				this.selectedText = selection;
-				console.log(selection);
+				// console.log(selection);
 			},
 			insertVariable: function (insert) {
 				const self = this;
@@ -156,6 +156,8 @@
 				}, 10);
 			},
 			postStuff() {
+				console.log("MSG => ", this.message);
+
 				const formData = new FormData();
 				formData.append("atendente", this.atendente);
 				formData.append("pronome", this.pronome);
@@ -164,6 +166,7 @@
 
 				axios
 					.post("/xls", formData, {
+						// .post("http://localhost:3000/xls", formData, {
 						responseType: "blob",
 						headers: {
 							"Content-Type": `multipart/form-data; boundary=${formData._boundary}`,

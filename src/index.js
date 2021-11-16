@@ -10,7 +10,7 @@ const _ = require("lodash");
 const { nanoid } = require("nanoid");
 const findRemoveSync = require("find-remove");
 
-const { removeFile, normalizeRecord } = require("./utils");
+const { removeFile, normalizeRecord, normalizeHotmartRecord } = require("./utils");
 const { generateCSVFromCSV } = require("./csvHandlers");
 const { generateXLSFromCSV } = require("./xlsHandlers");
 const app = express();
@@ -118,7 +118,6 @@ app.post("/csv", async (req, res) => {
 
 app.post("/xls", async (req, res) => {
 	const { atendente, pronome, message } = req.body;
-	console.log("MSG BODY => ", message);
 	const downloadsPath = `./downloads/${nanoid()}`;
 	try {
 		if (!req.files) {
@@ -169,6 +168,68 @@ app.post("/xls", async (req, res) => {
 						});
 
 						removeFile(filePath);
+					});
+			});
+		}
+	} catch (err) {
+		res.status(500).send({ err });
+	}
+});
+
+app.post("/hotmart", async (req, res) => {
+	const { atendente, pronome, message } = req.body;
+	const downloadsPath = `./downloads/${nanoid()}`;
+	try {
+		if (!req.files) {
+			res.status(400).send({
+				status: false,
+				message: "No file uploaded",
+			});
+		} else {
+			const originalCSV = req.files.csv;
+
+			const filePath = `./temp/${originalCSV.name}`;
+
+			const rows = [];
+
+			await originalCSV.mv(filePath, async (err) => {
+				if (err) {
+					return res.status(500).send({ err: err });
+				}
+
+				fs.createReadStream(filePath)
+					.pipe(csv({ separator: ";" }))
+					.on("data", (row) => {
+						console.log(row);
+						rows.push(
+							normalizeHotmartRecord({
+								...row,
+								atendente,
+								pronome,
+								message,
+							})
+						);
+					})
+					.on("end", async () => {
+						const xlsName = `${originalCSV.name.replace(".csv", ".xlsx")}`;
+						const xlsPath = `${downloadsPath}-${xlsName}`;
+
+						console.log(`CSV file ${originalCSV.name} successfully processed`);
+
+						// await generateXLSFromCSV(rows, xlsPath, () => {
+						// 	res
+						// 		.set({
+						// 			"X-FILE-NAME": xlsName,
+						// 			"Access-Control-Expose-Headers": "X-FILE-NAME",
+						// 		})
+						// 		.status(200)
+						// 		.download(xlsPath, (err) => {
+						// 			if (err) return res.status(500).send({ err });
+						// 		});
+						// });
+
+						removeFile(filePath);
+						res.status(200).send({ ok: "ok" });
 					});
 			});
 		}
