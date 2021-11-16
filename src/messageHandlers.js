@@ -11,15 +11,16 @@ const msgVariables = [
 
 function formatMessage(message, data) {
 	let msgWithVariables = message;
-	let m = msgWithVariables.replace(/(\r\n|\n|\r)/gm, "%0A");
-	console.log("sem line breaks? ", m);
+	// let m =
+	msgWithVariables.replace(/(\r\n|\n|\r)/gm, "%0A");
+	// console.log("sem line breaks? ", m);
 
 	msgVariables.forEach((variable) => {
 		msgWithVariables = msgWithVariables.split(variable).join(data[variable]);
 
 		return true;
 	});
-	console.log("MSG => ", msgWithVariables);
+	// console.log("MSG => ", msgWithVariables);
 	return msgWithVariables;
 }
 

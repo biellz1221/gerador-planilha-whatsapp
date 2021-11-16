@@ -28,7 +28,9 @@ async function generateXLSFromCSV(rows, xlsPath, callback) {
 	rows.map((row, index) => {
 		Object.keys(row).forEach((key, keyIndex) => {
 			// if (key === "link") {
-			// 	worksheet.cell(index + 2, keyIndex + 1).formula(`HYPERLINK("${row[key]}"; "Clique aqui")`);
+			// 	// console.log(`LINK => ${row[key]}`);
+			// 	let fm = `HYPERLINK("https://api.whatsapp.com/send?phone=5522992576349&text=%F0%9F%91%8DO%20primeiro%20nome%20de%20Gabriel%20Baptista%20%C3%A9%20Gabriel%2C%20o%20telefone%20%C3%A9%205522992576349%2C%20o%20email%20biellz1221%40gmail.com%20e%20quem%20vai%20atender%20%C3%A9%20o%20Gabriel")`;
+			// 	worksheet.cell(index + 2, keyIndex + 1).formula(fm);
 			// } else {
 			// 	worksheet.cell(index + 2, keyIndex + 1).string(row[key]);
 			// }

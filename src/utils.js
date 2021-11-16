@@ -17,8 +17,6 @@ function capitalizeFirst(str) {
 function normalizeRecord(row) {
 	let telefone, nome, pnome, link, message;
 
-	console.log("MSG BF TREAT => ", row.message);
-
 	telefone = `${row.ddi ? row.ddi : "55"}${row.ddd}${row.telefone}`;
 
 	nome = row.nome
