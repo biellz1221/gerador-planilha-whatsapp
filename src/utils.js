@@ -17,7 +17,7 @@ function capitalizeFirst(str) {
 function normalizeRecord(row) {
 	let telefone, nome, pnome, link, message;
 
-	telefone = `${row.ddi ? row.ddi : "55"}${row.ddd}${row.telefone}`;
+	telefone = `${row.ddi}${row.ddd}${row.telefone}`;
 
 	nome = row.nome
 		.toLowerCase()
